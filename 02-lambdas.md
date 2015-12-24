@@ -66,16 +66,18 @@ The main concept in Lambda calculus is expressions. An expression can be express
 
 * **application** -- This is the act of applying a function to an argument. Suppose you want a square of 10, so in lambda calculus you will write a square function `λx.x*x` and apply it to 10. This function application  would result in `(λx.x*x) 10 = 10*10 = 100`.You can not only apply simple values like 10 but, you can apply a function to another function to produce another function. For example, `(λx.x*x) (λz.z+10)` will produce a function `λz.(z+10)*(z+10)`. Now, you can use this function to produce number plus 10 squares. This is an example of higher order function.
 
-**application** -- 把一个函数当成一个参数的行为。简书你想要10的平台，那你需要写一个λ演算式 `λx.x*x`并把10当真自变量传进去，这个函数程序就会返回`(λx.x*x) 10 = 10*10 = 100`。但是你不仅仅可以只传10，你可以把一个函数传给另一个函数然后生成另一个函数。比如，`(λx.x*x) (λz.z+10)` 会生成这样一个新的函数 `λz.(z+10)*(z+10)`。现在，你可以用这个函数来生成一个数加上10的平方。这就是一个高阶函数的实例。
+* **application** -- 把一个函数当成一个参数的行为。简书你想要10的平台，那你需要写一个λ演算式 `λx.x*x`并把10当真自变量传进去，这个函数程序就会返回`(λx.x*x) 10 = 10*10 = 100`。但是你不仅仅可以只传10，你可以把一个函数传给另一个函数然后生成另一个函数。比如，`(λx.x*x) (λz.z+10)` 会生成这样一个新的函数 `λz.(z+10)*(z+10)`。现在，你可以用这个函数来生成一个数加上10的平方。这就是一个高阶函数的实例。
 
 
 Now, you understand Lambda calculus and its impact on functional programming languages. Let's learn how they are implemented in Java 8.
 
 现在，你已经理解了`λ演算`和它对函数式编程语言的影响。下面我们继续学习它们在java8中如何实现。
 
-## Passing behavior before Java 8
+## 在java8之前传递行为
 
 Before Java 8, the only way to pass behavior was to use anonymous classes. Suppose you want to send an email in another thread after user registration. Before Java 8, you would write code like one shown below.
+
+Java8之前，传递行为的唯一方法就是通过匿名内部类。假设你在用户完成注册功能之后，需要通过另外一个线程发送一封邮件。在Java8之前，可以通过如下方式：
 
 ```java
 sendEmail(new Runnable() {
@@ -88,11 +90,16 @@ sendEmail(new Runnable() {
 
 The sendEmail method has following method signature.
 
+sendEmail方法定义如下：
+
 ```java
 public static void sendEmail(Runnable runnable)
 ```
 
 The problem with the above mentioned code is not only that we have to encapsulate our action i.e. `run` method in an object but, the bigger problem is that it misses the programmer intent i.e. to pass behavior to `sendEmail` function. If you have used libraries like Guava then, you would have certainly felt the pain of writing anonymous classes. A simple example of filtering all the tasks with **lambda** in their title is shown below.
+
+上面的代码的问题不仅仅在于我们需要把行为封装进去，比如`run`方法在一个对象里面；更糟糕的是，它丢失了开发者原本的意图，比如把行为传递给`sendEmail`函数。如果你用过一些其他库，如Guava,那么你就会切身的感受到写匿名内部类的痛苦。下面是一个简单的例子，过滤所有标题中包含**lambda**字符串的task。
+
 
 ```java
 Iterable<Task> lambdaTasks = Iterables.filter(tasks, new Predicate<Task>() {
@@ -103,6 +110,8 @@ Iterable<Task> lambdaTasks = Iterables.filter(tasks, new Predicate<Task>() {
 });
 ```
 With Java 8 Stream API, you can write the above mentioned code without the use of a third party library like Guava. We will cover streams in [chapter 3](./03-streams.md). So, stay tuned!!
+
+使用Java8的Stream API,开发者不用太第三方库额可以写出上面的代码，我们将在下一章[chapter 3](./03-streams.md)讲述streams相关的知识。这里，暂不多提。
 
 ## Java 8 Lambda expressions
 

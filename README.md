@@ -11,7 +11,7 @@ Java8已经不再是一个新的话题，市面上已经有很多基于它的图
 ## Table of Contents
 
 * [接口的默认和静态方法](./01-default-static-interface-methods.md)
-* [Lambdas表达式](./02-lambdas.md)
+* [Lambda表达式](./02-lambdas.md)
 * [Streams](./03-streams.md)
 * [Collectors](./04-collectors.md)
 * [Optionals](./05-optionals.md)
