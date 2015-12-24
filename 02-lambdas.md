@@ -36,23 +36,42 @@ Collections.sort(names, (first, second) -> first.length() - second.length());
 
 Lambda expressions have their roots in the Lambda Calculus. [Lambda calculus](https://en.wikipedia.org/wiki/Lambda_calculus) originated from the work of [Alonzo Church](https://en.wikipedia.org/wiki/Alonzo_Church) on formalizing the concept of expressing computation with functions. Lambda calculus is turing complete formal mathematical way to express computations. Turing complete means you can express any mathematical computation via lambdas.
 
+lambda表达式源自于`λ演算`.[λ演算](https://en.wikipedia.org/wiki/Lambda_calculus)是[Alonzo Church](https://en.wikipedia.org/wiki/Alonzo_Church)在用函数式来制定表达式计算概念的得出的。`λ演算`是等价于图灵机的。等价于图灵机意味着你可以用lambda表达式来表达任何数学算式。
+
 
 
 Lambda calculus became the basis of strong theoretical foundation of functional programming languages. Many popular functional programming languages like Haskell, Lisp are based on Lambda calculus. The idea of higher order functions i.e. a function accepting other functions came from Lambda calculus.
 
+`λ演算`后来成为了函数式编程语言强有力的理论基础。诸如 Hashkell、Lisp等著名的函数式编程语言都是基于`λ演算`.高阶函数的概念就来自于`λ演算`。
+
 The main concept in Lambda calculus is expressions. An expression can be expressed as:
+
+`λ演算`最主要的概念就是表达式，一个表达式可以用如下形式来表示：
 
 ```
 <expression> := <variable> | <function>| <application>
 ```
 
+
+
 * **variable** -- A variable is a placeholder like x, y, z for values like 1, 2, etc or lambda functions.
+
+* **variable** -- 一个variable就是一个类似x、y、z占位符或者1、2这类值,或者lambda函数式
+
 
 * **function** -- It is an anonymous function definition that takes one variable and produces another lambda expression. For example, `λx.x*x` is a function to compute square of a number.
 
+* **function** -- 函数的定义，需要一个变量，生产出另一个lambda表达式。比如`λx.x*x`是一个求平方的函数。
+
+
 * **application** -- This is the act of applying a function to an argument. Suppose you want a square of 10, so in lambda calculus you will write a square function `λx.x*x` and apply it to 10. This function application  would result in `(λx.x*x) 10 = 10*10 = 100`.You can not only apply simple values like 10 but, you can apply a function to another function to produce another function. For example, `(λx.x*x) (λz.z+10)` will produce a function `λz.(z+10)*(z+10)`. Now, you can use this function to produce number plus 10 squares. This is an example of higher order function.
 
+**application** -- 把一个函数当成一个参数的行为。简书你想要10的平台，那你需要写一个λ演算式 `λx.x*x`并把10当真自变量传进去，这个函数程序就会返回`(λx.x*x) 10 = 10*10 = 100`。但是你不仅仅可以只传10，你可以把一个函数传给另一个函数然后生成另一个函数。比如，`(λx.x*x) (λz.z+10)` 会生成这样一个新的函数 `λz.(z+10)*(z+10)`。现在，你可以用这个函数来生成一个数加上10的平方。这就是一个高阶函数的实例。
+
+
 Now, you understand Lambda calculus and its impact on functional programming languages. Let's learn how they are implemented in Java 8.
+
+现在，你已经理解了`λ演算`和它对函数式编程语言的影响。下面我们继续学习它们在java8中如何实现。
 
 ## Passing behavior before Java 8
 
