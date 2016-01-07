@@ -115,7 +115,11 @@ With Java 8 Stream API, you can write the above mentioned code without the use o
 
 ## Java 8 Lambda expressions
 
+## Java 8 Lambda表达式
+
 In Java 8, we would write the code using a lambda expression as show below. We have mentioned the same example in the code snippet above.
+
+在Java8中，我们可以用lambda表达式写出如下的代码。
 
 ```java
 sendEmail(() -> System.out.println("Sending email..."));
@@ -123,7 +127,11 @@ sendEmail(() -> System.out.println("Sending email..."));
 
 The code shown above is concise and does not pollute the programmer's intent to pass behavior. `()` is used to represent no function parameters i.e. `Runnable` interface `run` method does not have any parameters. `->` is the lambda operator that separates the parameters from the function body which prints `Sending email...` to the standard output.
 
+上面的代码非常简洁，并且能够清晰的传递编码者的意图。`()`用来传递无参函数，上例中的`Runnable`接口的中`run`方法不含任何参数，直接就可以用`()`代替。`->`是将参数和函数体分开的lambda操作符，上例中，`->`后面打印`Sending email`。
+
 Let's look at the Collections.sort example again so that we can understand how lambda expressions work with the parameters. To sort a list of names by their length, we passed a `Comparator` to the sort function. The `Comparator` is shown below.
+
+下面再次通过Collections.sort这个例子来了解带参数的lambda表达式如何使用。通过传递一个`Comparator`到sort函数，来将names列表按照字符串的长度排序。`Comparator`如下
 
 ```java
 Comparator<String> comparator = (first, second) -> first.length() - second.length();
@@ -131,22 +139,35 @@ Comparator<String> comparator = (first, second) -> first.length() - second.lengt
 
 The lambda expression that we wrote was corresponding to compare method in the Comparator interface. The signature of `compare` function is shown below.
 
+上述的lambda表达式等同于Comparator接口中的compare方法。`compare`方法的定义如下:
+
 ```java
 int compare(T o1, T o2);
 ```
-
 `T` is the type parameter passed to `Comparator` interface. In this case it will be a `String` as we are working over a List of `String` i.e. names.
+
+`T`是传递给`Comparator`接口的参数类型，在本例中names列表是由`String`组成，所以`T`代表的是`String`。
 
 In the lambda expression, we didn't have to explicitly provide the type -- String. The `javac` compiler inferred the type information from its context. The Java compiler inferred that both parameters should be String as we are sorting a List of String and `compare` method use only one T type. The act of inferring type from the context is called **Type Inference**. Java 8 improves the already existing type inference system in Java and makes it more robust and powerful to support lambda expressions. `javac` under the hoods look for the information close to your lambda expression and uses that information to find the correct type for the parameters.
 
+在lambda表达式中，我们每必要明确指出参数类型，`javac`编译器会通过上下文自动推断参数的类型信息。由于我们是在对一个由`String`类型组成的List进行排序并且`compare`方法仅仅用一个T类型，所以Java编译器自动推断出两个参数都是`String`类型。根据上下文推断类型的行为称为**类型推断**。Java8提升了Java中已经存在的类型推断系统，使得对lambda表达式的支持变得更加强大。`javac`通过紧邻lambda表达式的一些信息来找出参数的正确类型。
+
 > In most cases, `javac` will infer the type from the context. In case it can't resolve type because of missing or incomplete context information then the code will not compile. For example, if we remove `String` type information from `Comparator` then code will fail to compile as shown below.
+
+> 在大多数情况下，`javac`会根据上下文自动推断类型。如果因为丢失了上下文信息或者上下文信息不完整而导致无法推断出类型，代码就不会编译通过。例如，下面我们将`String`类型从`Comparator`中移除，代码就会编译失败。
+
+
 ```java
 Comparator comparator = (first, second) -> first.length() - second.length(); // compilation error - Cannot resolve method 'length()'
 ```
 
 ## How does Lambda expressions work in Java 8?
+## Lambda表达式在Java8中的运行机制
 
 You may have noticed that the type of a lambda expression is some interface like Comparator in the above example. You can't use any interface with lambda expression. ***Only those interfaces which have only one non-object abstract method can be used with lambda expressions***. These kinds of interfaces are called **Functional interfaces** and they can be annotated with `@FunctionalInterface` annotation. Runnable interface is an example of functional interface as shown below.
+
+你可能已经发现lambda表达式的类型是一些类似上例中Comparator
+的接口。但是不是每个接口都可以使用lambda表达式，***只有那些仅仅包含一个非实例化抽象方法的接口才能使用lambda表达式***。这样的接口被称着**函数式接口**并且它们能够被`@FunctionalInterface`注解注释。下面的Runnable接口就是函数式接口的一个例子。
 
 ```java
 @FunctionalInterface
@@ -157,17 +178,31 @@ public interface Runnable {
 
 `@FunctionalInterface` annotation is not mandatory but, it can help tools know that an interface is a functional interface and perform meaningful actions. For example, if you try to compile an interface that annotates itself with `@FunctionalInterface` annotation and has multiple abstract methods then compilation will fail with an error ***Multiple non-overriding abstract methods found***. Similarly, if you add `@FunctionInterface` annotation to an interface without any method i.e. a marker interface then you will get error message ***No target method found***.
 
+`@FunctionalInterface`注解不是必须的，但是它能够让工具知道一个接口是一个函数式接口并且表现出有意义的行为。比如，如果你是这编译一个用`@FunctionalInterface`注解自己并且含有多个抽象方法的接口，编译就会报出这样一个错***Multiple non-overriding abstract methods found***。同样的，如果你给一个不含有任何方法的接口添加`@FunctionalInterface`注解，会得到如下错误信息,***No target method found***.
+
 Let's answer one of the most important questions that might be coming to your mind. ***Are Java 8 lambda expressions just the syntactic sugar over anonymous inner classes or how does functional interface gets translated to bytecode?***
+
+下面来回答一个你心中的疑问，***Java8的lambda表达式只是一个匿名内部类的语法糖吗或者函数式接口是如何被转换成字节码的？***
 
 The short answer is **NO**. Java 8 does not use anonymous inner classes mainly for two reasons:
 
+答案是**NO**,Java8不采用匿名内部类的原因主要有两点：
+
 1. **Performance impact**: If lambda expressions were implemented using anonymous classes then each lambda expression would result in a class file on disk. When these classes are loaded by JVM at startup, then startup time of JVM will increase as all the classes needs to be first loaded and verified before they can be used.
+
+1. **性能影响**: 如果lambda表达式是采用匿名内部类实现的，那么每一个lambda表达式都会生成一个class文件，所有的class文嘉都需要在进入时加载并且在使用前确认，从而导致JVM的启动变慢。
 
 2. **Possibility to change in future**: If Java 8 designers would have used anonymous classes from the start then it would have limited the scope of future lambda implementation changes.
 
+2. **向后的扩展性**: 如果Java8的设计者从一开始就采用匿名内部类的方式，那么这将会lambda表达式未来的使用范围。
+
 ### Using invokedynamic
 
+### 使用动态启用
+
 Java 8 designers decided to use `invokedynamic` instruction added in Java 7 to defer the translation strategy at runtime. When`javac` compiles the code, it captures the lambda expression and generates an `invokedynamic` call site (called lambda factory). The `invokedynamic` call site when invoked returns an instance of the functional interface to which the lambda is being converted. For example, if we look at the byte code of our Collections.sort example, it will look like as shown below.
+
+
 
 ```
 public static void main(java.lang.String[]);
