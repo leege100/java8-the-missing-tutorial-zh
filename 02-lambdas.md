@@ -203,6 +203,7 @@ The short answer is **NO**. Java 8 does not use anonymous inner classes mainly f
 Java 8 designers decided to use `invokedynamic` instruction added in Java 7 to defer the translation strategy at runtime. When`javac` compiles the code, it captures the lambda expression and generates an `invokedynamic` call site (called lambda factory). The `invokedynamic` call site when invoked returns an instance of the functional interface to which the lambda is being converted. For example, if we look at the byte code of our Collections.sort example, it will look like as shown below.
 
 
+Java8的设计者采用在Java7中新增的`动态启用`来延迟在运行时的加载策略。当`javac`编译代码时，会找出代码中的lambda表达式并且生成一个`动态启用`的调用地址（又称lambda工厂）。当`动态启用`被调用时，就会向lambda表达式转换的地方返回一个函数式接口的实例。比如，在Collections.sort这个例子中，它的字节码如下：
 
 ```
 public static void main(java.lang.String[]);
@@ -237,27 +238,49 @@ public static void main(java.lang.String[]);
 
 The interesting part of the byte code shown above is the line 23 `23: invokedynamic #7,  0              // InvokeDynamic #0:compare:()Ljava/util/Comparator;` where a call to `invokedynamic` is made.
 
+上面代码的关键部分位于第23行`23: invokedynamic #7,  0              // InvokeDynamic #0:compare:()Ljava/util/Comparator;`这里创建了一个`动态启用`的调用。
+
 The second step is to convert the body of the lambda expression into a method that will be invoked through the `invokedynamic` instruction. This is the step where JVM implementers have the liberty to choose their own strategy.
+
+接下来是将lambda表达式转换成一个将会通过`动态启用`指引调用的方法。在这一步中，JVM实现者有自由选择策略的权利。
 
 I have only glossed over this topic. You can read about internals at http://cr.openjdk.java.net/~briangoetz/lambda/lambda-translation.html.
 
+这里我仅粗略的概括一下，具体的内部标准见这里 http://cr.openjdk.java.net/~briangoetz/lambda/lambda-translation.html.
+
 ## Anonymous classes vs lambdas
+
+## 匿名类 vs lambda表达式
 
 Let's compare anonymous classes with lambdas to understand the differences between them.
 
+下面我们一起来对比一下匿名类和lambda表达式，以此来理解它们的不同。
+
 1. In anonymous classes, `this` refers to the anonymous class itself whereas in lambda expression `this` refers to the class enclosing the lambda expression.
+
+1. 在匿名类中，`this` 指代的是匿名类本身；而在lambda表达式中，`this`指代的是lambda表达式所在的这个类。
 
 2. You can shadow variables in the enclosing class inside the anonymous class. This gives compile time error when done inside lambda expression.
 
+2. 在匿名类中可以shadow包含此匿名类的变量，而在lambda表达式中就会报编译错误。
+
 3. Type of the lambda expression is determined from the context where as type of the anonymous class is specified explicitly as you create the instance of anonymous class.
+
+3. lambda表达式的类型是由上下文决定的，而匿名类中必须在创建实例的时候明确指定。
 
 ## Do I need to write my own functional interfaces?
 
+## 我需要自己去写函数式接口吗?
+
 By default, Java 8 comes with many functional interfaces which you can use in your code. They exist inside `java.util.function` package. Let's have a look at few of them.
+
+默认的，Java8带有许多可以直接在代码中使用的函数式接口。它们位于`java.util.function`包中，下面简单介绍几个:
 
 ### java.util.function.Predicate<T>
 
 This functional interface is used to define check for some condition i.e. a predicate. Predicate interface has one method called `test` which takes a value of type `T` and return boolean. For example, from a list of `names` if we want to filter out all the names which starts with **s** then we will use a predicate as shown below.
+
+此函数式接口是用来定义对一些条件的检查，比如一个判断。Predicate接口有一个叫`test`的方法，它需要一个`T`类型的值作为参数，返回布尔值。例如，在一个`names`列表中找出所有以**s**开头的名字就可以像如下代码这样使用判断。
 
 ```java
 Predicate<String> namesStartingWithS = name -> name.startsWith("s");
@@ -267,6 +290,8 @@ Predicate<String> namesStartingWithS = name -> name.startsWith("s");
 
 This functional interface is used for performing actions which does not produce any output. Predicate interface has one method called `accept` which takes a value of type `T` and return nothing i.e. it is void. For example, sending an email with given message.
 
+这个函数式接口用于那些不需要产生任何输出的行为。Predicate接口有一个叫做`accept`的方法，它需要一个`T`类型的参数并且返回值。例如，发一个指定信息的邮件：
+
 ```java
 Consumer<String> messageConsumer = message -> System.out.println(message);
 ```
@@ -274,6 +299,8 @@ Consumer<String> messageConsumer = message -> System.out.println(message);
 ### java.util.function.Function<T,R>
 
 This functional interface takes one value and produces a result. For example, if we want to uppercase all the names in our `names` list, we can write a Function as shown below.
+
+这个函数式接口需要一个值并返回一个结果。例如，将所有`names`列表中的name转换为大写，可以像下面这样写一个Function:
 
 ```java
 Function<String, String> toUpperCase = name -> name.toUpperCase();
@@ -283,11 +310,15 @@ Function<String, String> toUpperCase = name -> name.toUpperCase();
 
 This functional interface does not take any input but produces a value. This could be used to generate unique identifiers as shown below.
 
+这个函数式接口不需要传值，但是会返回一个值。可以像下面这样，用来生成唯一的标识符
+
 ```java
 Supplier<String> uuidGenerator= () -> UUID.randomUUID().toString();
 ```
 
 We will cover more functional interfaces throughout this tutorial.
+
+在接下来的章节中，我们会学习更多的函数式接口。
 
 ## Method references
 
