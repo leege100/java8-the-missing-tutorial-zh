@@ -1,5 +1,10 @@
-Lambdas
+Lambda表达式
 -----
+
+> - 原文链接： [Lambdas](https://github.com/shekhargulati/java8-the-missing-tutorial/blob/master/02-lambdas.md)  
+- 原文作者： [shekhargulati](https://github.com/shekhargulati)  
+- 译者： leege100  
+- 状态： 完成
 
 lambda表达式是java8中最重要的特性之一，它让代码变得简洁并且允许你传递行为。曾几何时，Java总是因为代码冗长和缺少函数式编程的能力而饱受批评。随着函数式编程变得越来越受欢迎，Java也被迫开始拥抱函数式编程。否则，Java会被大家逐步抛弃。
 

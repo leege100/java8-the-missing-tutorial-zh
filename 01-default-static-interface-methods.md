@@ -3,7 +3,6 @@
 
 > - 原文链接： [Default and Static Methods for Interfaces](https://github.com/shekhargulati/java8-the-missing-tutorial/blob/master/01-default-static-interface-methods.md)  
 - 原文作者： [shekhargulati](https://github.com/shekhargulati)  
-- 译文出自： [leege100](http://www.jianshu.com/users/bf691c3709d6/latest_articles)  
 - 译者： leege100  
 - 状态： 完成
 
