@@ -324,17 +324,25 @@ We will cover more functional interfaces throughout this tutorial.
 
 There would be times when you will be creating lambda expressions that only calls a specific method like `Function<String, Integer> strToLength = str -> str.length();`. The lambda only calls `length()` method on the `String` object. This could be simplified using method references like `Function<String, Integer> strToLength = String::length;`. They can be seen as shorthand notation for lambda expression that only calls a single method. In the expression `String::length`, `String` is the target reference, `::` is the delimiter, and `length` is the function that will be called on the target reference. You can use method references on both the static and instance methods.
 
+有时候，你需要为一个特定方法创建lambda表达式时，比如`Function<String, Integer> strToLength = str -> str.length();`，这个表达式仅仅在`String`对象上调用`length()`方法。可以这样来简化它，`Function<String, Integer> strToLength = String::length;`。仅调用一个方法的lambda表达式，可以用缩写符号来表示。在`String::length`中，`String`是目标参考，`::`是定界符，`length`是目标参考要调用的方法。方法参考可以用在静态方法和实例方法上。
+
 ### Static method references
 
 Suppose we have to find a maximum number from a list of numbers then we can write a method reference `Function<List<Integer>, Integer> maxFn = Collections::max`. `max` is a static method in the `Collections` class that takes one argument of type `List`. You can then call this like `maxFn.apply(Arrays.asList(1, 10, 3, 5))`. The above lambda expression is equivalent to `Function<List<Integer>, Integer> maxFn = (numbers) -> Collections.max(numbers);` lambda expression.
+
+假设我们需要从一个数字列表中找出最大的一个数字，那我们可以像这样写一个方法参考`Function<List<Integer>, Integer> maxFn = Collections::max`。`max`是一`Collections`里的一个静态方法，它需要传入一个`List`类型的参数。接下来你就可以这样调用它，`maxFn.apply(Arrays.asList(1, 10, 3, 5))`。上面的lambda表达式等价于`Function<List<Integer>, Integer> maxFn = (numbers) -> Collections.max(numbers);`。
 
 ### Instance method references
 
 This is used for method reference to an instance method for example `String::toUpperCase` calls `toUpperCase` method on a `String` reference. You can also use method reference with parameters for example `BiFunction<String, String, String> concatFn = String::concat`. The `concatFn` can be called as `concatFn.apply("shekhar", "gulati")`. The `String` `concat` method is called on a String object and  passed a parameter like `"shekhar".concat("gulati")`.
 
+这样的情况用于一个实例方法，比如`String::toUpperCase`是在一个`String`参考上调用 `toUpperCase`方法。还可以使用带参的方法参考，比如：`BiFunction<String, String, String> concatFn = String::concat`。`concatFn`可以向这样调用:`concatFn.apply("shekhar", "gulati")`。`String``concat`方法在一个String对象上调用并且传递一个类似`"shekhar".concat("gulati")`的参数。
+
 ## Exercise >> Lambdify me
 
 Let's look at the code shown below and apply what we have learnt so far.
+
+下面通过一段代码，来应用所学到的。
 
 ```java
 public class Exercise_Lambdas {
@@ -361,7 +369,11 @@ public class Exercise_Lambdas {
 ```
 The code shown above first fetches all the Tasks from a utility method `getTasks`. We are not interested in `getTasks` implementation. The `getTasks` could fetch tasks by accessing a web-service or database or in-memory. Once you have tasks, we filter all the reading tasks and extract the title field from the task. We add extracted title to a list and then finally return all the reading titles.
 
+上面这段代码首先通过工具方法`getTasks`取得所有的Task,这里我们不去关心`getTasks`方法的具体实现，`getTasks`能够通过webservice或者数据库或者内存获取task。一旦得到了tasks,我们就过滤所有处于reading状态的task，并且从task中提取他们的标题，最后放回所有处于reading状态task的标题。
+
 Let' start with the simplest refactor -- using foreach on a list with method reference.
+
+下面我们简单的重构下--在一个list上使用foreach和方法参考。
 
 ```java
 public class Exercise_Lambdas {
@@ -387,6 +399,8 @@ public class Exercise_Lambdas {
 
 Using `Predicate<T>` to filter out tasks.
 
+使用`Predicate<T>`来过滤task
+
 ```java
 public class Exercise_Lambdas {
 
@@ -411,6 +425,8 @@ public class Exercise_Lambdas {
 
 Using `Function<T,R>` for extracting out title from the Task.
 
+使用`Function<T,R>`来将task中的title提取出来。
+
 ```java
 public class Exercise_Lambdas {
 
@@ -434,6 +450,10 @@ public class Exercise_Lambdas {
 
 Using method reference for extractor
 
+把方法参考当着提取器。
+
+
+
 ```java
 public static void main(String[] args) {
     List<Task> tasks = getTasks();
@@ -447,6 +467,8 @@ public static void main(String[] args) {
 ```
 
 We can also write our own **Functional Interface** that clearly tells the reader intent of the developer. We can create an interface `TaskExtractor` that extends `Function` interface. The input type of interface is fixed to `Task` and output type depend on the implementing lambda. This way developer will only have to worry about the result type as input type will always remain Task.
+
+我们也可以自己编写`函数式接口`，这样可以清晰的把开发者的意图传递给读者。我们可以写一个继承自`Function`接口的`TaskExtractor`接口。这个接口的输入类型是固定的`Task`类型，输出类型由实现的lambda表达式来决定。这样开发者就只需要关注输出结果的类型，因为输入的类型只会是Task。
 
 ```java
 public class Exercise_Lambdas {
