@@ -1,17 +1,21 @@
-Collectors
+收集器(Collectors)
 ------
 
-On [day 2](http://shekhargulati.com/2015/07/26/day-2-lets-learn-about-streams/), you learned that Stream API can help you work with collections in a declarative manner. We looked at the `collect`, which is a terminal operation that collects the result set of a stream pipeline in a `List`. `collect` is a reduction operation that reduces a stream to a value. The value could be a Collection, Map, or a value object. You can use `collect` to achieve following:
+> - 原文链接： [Collectors](https://github.com/shekhargulati/java8-the-missing-tutorial/blob/master/04-collectors.md)  
+- 原文作者： [shekhargulati](https://github.com/shekhargulati)  
+- 译者： leege100  
+- 状态： 完成
 
-1. **Reducing stream to a single value:** Result of the stream execution can be reduced to a single value. Single value could be a `Collection` or numeric value like int, double, etc or a custom value object.
+在前一节中，我们已经了解到StreamAPI能够帮助我们用更直观简洁的方式来处理集合。现在我们来看一下`collect`方法，它是一个能够把stream管道中的结果集装进一个`List`集合的终极操作。	`collect`是一个把stream规约成一个value的规约操作，这里的value可以是一个Collection、Map或者一个value对象。在下面这几种情况下，可以使用`collect`操作。
 
-2. **Group elements in a stream:** Group all the tasks in a stream by TaskType. This will result in a `Map<TaskType, List<Task>>` with each entry containing a TaskType and its associated Tasks. You can use any other Collection instead of a List as well. If you don't need all the tasks associated with a TaskType you can also produce `Map<TaskType, Task>` as well. One example could be grouping tasks by type and obtaining the first created task.
+1. **把stream规约到一个单独的值** stream的执行结果可以规约成一个单独的值，这个单独的值可以是`Collection`或者数值型的值如int、double等，还可以是一个自定义的值对象。 
 
-3. **Partition elements in a stream:** You can partition a stream into two groups -- due and completed tasks.
+2. **在stream中对元素进行分组** 对stream中的所有task按照TaskType分组。这会生成一个一个`Map<TaskType,List<Task>`,其中的每个entry都包含一个TaskType和与它相关联的Task。也可以使用其它任何的Collection来替代List。如果不需要把所有的task对应到一个TaskType,也可以生成一个`Map<TaskType,Task>`。
+3. **分离stream中的元素** 可以把一个stream分离到两个组中--正在进行中的和已经完成的task。 
 
 ## Collector in Action
 
-To feel the power of `Collector` let us look at the example where we have to group tasks by their type. In Java 8, we can achieve grouping by TaskType by writing code shown below. **Please refer to [day 2](http://shekhargulati.com/2015/07/26/day-2-lets-learn-about-streams/) blog where we talked about the example domain we will use in this series**
+下面我们通过这个根据type来对task进行分组的例子，来体验`Collector`的作用。在java8中，我们可以像下面这样来实现根据TaskType分组。**请参考博客[day 2](http://shekhargulati.com/2015/07/26/day-2-lets-learn-about-streams/)**
 
 ```java
 private static Map<TaskType, List<Task>> groupTasksByType(List<Task> tasks) {
@@ -19,7 +23,7 @@ private static Map<TaskType, List<Task>> groupTasksByType(List<Task> tasks) {
 }
 ```
 
-The code shown above uses `groupingBy` `Collector` defined in the `Collectors` utility class. It creates a Map with key as the `TaskType` and value as the list containing all the tasks which have same `TaskType`. To achieve the same in Java 7 you have to write following code.
+上面的代码使用了`Collectors`工具类中定义的`groupingBy` `Collector`方法。它创建一个map，其中key为`TaskType`、value为所有具有相同`TaskType`的task组成的一个list列表。在java7中要实现相同的功能，需要写如下的代码。
 
 ```java
 public static void main(String[] args) {
@@ -41,17 +45,19 @@ public static void main(String[] args) {
 }
 ```
 
-## Collectors: Common reduction operations
+## 收集器（Collectors）:常用规约操作
 
-`Collectors` utility class provides a lot of static utility methods for creating collectors for most common use cases like accumulating elements into a Collection, grouping and partitioning elements, summarizing elements according to various criteria. We will cover most common `Collector`s in this blog.
+`Collectors` 工具类提供了许多静态工具方法来为大多数常用的用户用例创建收集器，比如将元素装进一个集合中、将元素分组、根据不同标准对元素进行汇总等。本文中将覆盖大多数常见的`收集器(Collector)`。
 
-## Reducing to a single value
 
-As discussed above, collectors can be used to collect stream output to a Collection or produce a single value.
+## 规约到一个单独的值
 
-### Collecting data into a List
+如上面所说，收集器(collector)可以用来把stream收集到一个collection中或者产生一个单独的值。
 
-Let's write our first test case -- given a list of Tasks we want to collect all the titles into a List.
+### 把数据装进一个list列表中
+
+下面我们给出第一个测试用例--将给定的任务列表的所有标题收集到一个List列表中。
+
 
 ```java
 import static java.util.stream.Collectors.toList;
@@ -62,11 +68,13 @@ public class Example2_ReduceValue {
     }
 }
 ```
-The `toList` collector uses the List's `add` method to add elements into the resulting List. `toList` collector uses `ArrayList` as the List implementation.
 
-### Collecting data into a Set
+`toList`收集器通过使用List的`add`方法将元素添加到一个结果List列表中，`toList`收集器使用`ArrayList`作为List的实现。
 
-If we want to make sure only unique titles are returned and we don't care about order then we can use `toSet` collector.
+
+### 将数据收集到一个Set中
+
+如果要保证所收集的title不重复并且我们对数据的排序没有要求的话，可以采用`toSet`收集器。
 
 ```java
 import static java.util.stream.Collectors.toSet;
@@ -76,18 +84,19 @@ public Set<String> uniqueTitles(List<Task> tasks) {
 }
 ```
 
-`toSet` method uses `HashSet` as the Set implementation to store the result set.
+`toSet` 方法采用`HashSet`作为Set的实现来储存结果集。
 
-### Collecting data into a Map
+### 把数据收集到一个Map中
 
-You can convert a stream to a Map by using the `toMap` collector. The `toMap` collector takes two mapper functions to extract the key and values for the Map. In the code shown below, `Task::getTitle` is `Function` that takes a task and produces a key with only title. The **task -> task** is a lambda expression that just returns itself i.e. task in this case.
+可以使用`toMap`收集器将一个stream转换成一个Map。`toMap`收集器需要两个集合函数来提取map中的key和value。下面的代码中，`Task::getTitle`需要一个task并产生一个仅有一个标题的key。**task -> task**是一个用来返回自己的lambda表达式，上例中返回一个task。
 
 ```java
 private static Map<String, Task> taskMap(List<Task> tasks) {
   return tasks.stream().collect(toMap(Task::getTitle, task -> task));
 }
 ```
-We can improve the code shown above by using the `identity` default method in the `Function` interface to make code cleaner and better convey developer intent to use identity function as shown below.
+
+可以使用`Function`接口中的默认方法`identity`来让上面的代码代码变得更简洁明了、传递开发者意图时更加直接，下面是采用identity函数的代码。
 
 ```java
 import static java.util.function.Function.identity;
@@ -97,14 +106,14 @@ private static Map<String, Task> taskMap(List<Task> tasks) {
 }
 ```
 
-The code to create a Map from the stream will throw an exception when duplicate keys are present. You will get an error like the one shown below.
+代码创建了一个Map，当出现相同的key时就会抛出如下的异常。
 
 ```
 Exception in thread "main" java.lang.IllegalStateException: Duplicate key Task{title='Read Version Control with Git book', type=READING}
 at java.util.stream.Collectors.lambda$throwingMerger$105(Collectors.java:133)
 ```
 
-You can handle duplicates by using another variant of the `toMap` function which allows us to specify a merge function. The merge function allows a client to specify how they want to resolve collisions between values associated with the same key. In the code shown below, we just used the last value but you can write intelligent algorithm to resolve the collision.
+`toMap`还有一个可以指定合并函数的变体，我们可以采用它来处理重复的副本。合并函数允许开发者指定一个解决同一个key冲突的规则。在下面的代码中，我们简单地使用最后一个value，当然你也可以写更加智能的算法来处理冲突。
 
 ```java
 private static Map<String, Task> taskMap_duplicates(List<Task> tasks) {
@@ -112,7 +121,7 @@ private static Map<String, Task> taskMap_duplicates(List<Task> tasks) {
 }
 ```
 
-You can use any other Map implementation by using the third variant of `toMap` method. This requires you to specify `Map` `Supplier` that will be used to store the result.
+我们还可以使用`toMap`的第三种变体方法来使用任何其它的Map实现，这需要指定`Map` 和`Supplier`来存放结果。
 
 ```
 public Map<String, Task> collectToMap(List<Task> tasks) {
@@ -120,11 +129,11 @@ public Map<String, Task> collectToMap(List<Task> tasks) {
 }
 ```
 
-Similar to the `toMap` collector there is also `toConcurrentMap` collector that produces `ConcurrentMap` instead of a  `HashMap`.
+与`toMap`收集器类似，`toConcurrentMap`收集器可以产生`ConcurrntMap`来替代`HashMap`。
 
-### Using other collections
+### Using other collections 使用其它的集合
 
-The specific collectors like `toList` and `toSet` does not allow you to specify the underlying List or Set implementation. You can use `toCollection` collector when you want to collect the result to other types of collections as shown below.
+`toList`和`toSet`等特定的收集器不支持指定潜在的list或set的实现，当你想要像下面这样这样把结果聚合到其它类型的集合时可以采用`toCollection`收集器。
 
 ```
 private static LinkedHashSet<Task> collectToLinkedHaskSet(List<Task> tasks) {
@@ -132,7 +141,7 @@ private static LinkedHashSet<Task> collectToLinkedHaskSet(List<Task> tasks) {
 }
 ```
 
-### Finding Task with longest title
+### 找出标题最长的task
 
 ```java
 public Task taskWithLongestTitle(List<Task> tasks) {
@@ -140,7 +149,7 @@ public Task taskWithLongestTitle(List<Task> tasks) {
 }
 ```
 
-### Count total number of tags
+### 统计tags的总数
 
 ```java
 public int totalTagCount(List<Task> tasks) {
@@ -148,7 +157,7 @@ public int totalTagCount(List<Task> tasks) {
 }
 ```
 
-### Generate summary of Task titles
+### 生成task标题的汇总
 
 ```java
 public String titleSummary(List<Task> tasks) {
@@ -156,13 +165,13 @@ public String titleSummary(List<Task> tasks) {
 }
 ```
 
-## Grouping Collectors
+## 将元素分组
 
-One of the most common use case of Collector is to group elements. Let's look at various examples to understand how we can perform grouping.
+Collector收集器一个最常见的用户用例就是对元素进行分组，下面我们通过几个示例来理解我们可以如何来分组。
 
-### Example 1: Grouping tasks by type
+### Example 1: 根据type对tasks分组
 
-Let's look the example shown below where we want to group all the tasks based on their `TaskType`. You can very easily perform this task by using the `groupingBy` Collector of the `Collectors` utility class as shown below. You can make it more succinct by using method references and static imports.
+下面这个例子，我们根据`TaskType`对task进行分组。通过使用`Collectors`工具类的`groupingBy`收集器，我们可以非常简单的完成这个功能。可以使用方法引用和静态引入来让代码变得更加简洁。
 
 ```java
 import static java.util.stream.Collectors.groupingBy;
@@ -170,13 +179,12 @@ private static Map<TaskType, List<Task>> groupTasksByType(List<Task> tasks) {
        return tasks.stream().collect(groupingBy(Task::getType));
 }
 ```
-
-It will produce the output shown below.
+会产生如下的输出：
 ```
 {CODING=[Task{title='Write a mobile application to store my tasks', type=CODING, createdOn=2015-07-03}], WRITING=[Task{title='Write a blog on Java 8 Streams', type=WRITING, createdOn=2015-07-04}], READING=[Task{title='Read Version Control with Git book', type=READING, createdOn=2015-07-01}, Task{title='Read Java 8 Lambdas book', type=READING, createdOn=2015-07-02}, Task{title='Read Domain Driven Design book', type=READING, createdOn=2015-07-05}]}
 ```
 
-### Example 2: Grouping by tags
+### Example 2: 根据tags分组
 
 ```java
 private static Map<String, List<Task>> groupingByTag(List<Task> tasks) {
@@ -204,9 +212,7 @@ private static Map<String, List<Task>> groupingByTag(List<Task> tasks) {
     }
 ```
 
-### Example 3: Group task by tag and count
-
-Combining classifiers and Collectors
+### Example 3: 根据tag和tag的个数分组
 
 ```java
 private static Map<String, Long> tagsAndCount(List<Task> tasks) {
@@ -216,7 +222,7 @@ private static Map<String, Long> tagsAndCount(List<Task> tasks) {
     }
 ```
 
-### Example 4: Grouping by TaskType and createdOn
+### Example 4: 根据TaskType和createdOn分组
 
 ```java
 private static Map<TaskType, Map<LocalDate, List<Task>>> groupTasksByTypeAndCreationDate(List<Task> tasks) {
@@ -224,9 +230,9 @@ private static Map<TaskType, Map<LocalDate, List<Task>>> groupTasksByTypeAndCrea
     }
 ```
 
-## Partitioning
+## 分割
 
-There are times when you want to partition a dataset into two dataset based on a predicate. For example, we can partition tasks into two groups by defining a partitioning function that partition tasks into two groups -- one with due date before today and one with due date after today.
+有时候，你需要根据一定的规则将一个数据集分成两个数据集。比如，我们可以定义一个分割函数，根据规则`进行时间早于今天和进行时间晚于今天`将task分成两组。
 
 ```java
 private static Map<Boolean, List<Task>> partitionOldAndFutureTasks(List<Task> tasks) {
@@ -234,9 +240,9 @@ private static Map<Boolean, List<Task>> partitionOldAndFutureTasks(List<Task> ta
 }
 ```
 
-## Generating statistics
+## 生成统计
 
-Another group of collectors that are very helpful are collectors that produce statistics. These work on the primitive datatypes like int,double, long and can be used to produce statistics like the one shown below.
+另外，一些产生统计结果的收集器也非常有用。它们主要用于int、double、long等基本类型上，它们可以用来产生类似如下的统计结果。
 ```java
 IntSummaryStatistics summaryStatistics = tasks.stream().map(Task::getTitle).collect(summarizingInt(String::length));
 System.out.println(summaryStatistics.getAverage()); //32.4
@@ -246,16 +252,16 @@ System.out.println(summaryStatistics.getMin()); //24
 System.out.println(summaryStatistics.getSum()); //162
 ```
 
-There are other variants as well for other primitive types like `LongSummaryStatistics` and `DoubleSummaryStatistics`
+还有一些其它的基本类型的变体，比如`LongSummaryStatistics` 和 `DoubleSummaryStatistics`
 
-You can also combine one `IntSummaryStatistics` with another using the `combine` operation.
+还可以用`combine`操作来把两个`IntSummaryStatistics`结合到一起。
 
 ```java
 firstSummaryStatistics.combine(secondSummaryStatistics);
 System.out.println(firstSummaryStatistics)
 ```
 
-## Joining all titles
+## 把所有的titles连在一起
 
 ```java
 private static String allTitles(List<Task> tasks) {
@@ -263,7 +269,7 @@ private static String allTitles(List<Task> tasks) {
 }
 ```
 
-## Writing a custom Collector
+## 编写一个自定义的收集器
 
 ```java
 import com.google.common.collect.HashMultiset;
@@ -328,9 +334,9 @@ public class MultisetCollectorExample {
 }
 ```
 
-## Word Count in Java 8
+## Word Count in Java 8 Java8中的单词统计
 
-We will end this section by writing famous word count example in Java 8 using Streams and Collectors.
+下面，我们通过java8中的Streams和Collectors编写一个非常著名的单词统计示例来结束本文。
 
 ```java
 public static void wordCount(Path path) throws IOException {

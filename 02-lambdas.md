@@ -234,15 +234,15 @@ Supplier<String> uuidGenerator= () -> UUID.randomUUID().toString();
 
 ## Method references
 
-有时候，你需要为一个特定方法创建lambda表达式，比如`Function<String, Integer> strToLength = str -> str.length();`，这个表达式仅仅在`String`对象上调用`length()`方法。可以这样来简化它，`Function<String, Integer> strToLength = String::length;`。仅调用一个方法的lambda表达式，可以用缩写符号来表示。在`String::length`中，`String`是目标参考，`::`是定界符，`length`是目标参考要调用的方法。静态方法和实例方法都可以使用方法参考。
+有时候，你需要为一个特定方法创建lambda表达式，比如`Function<String, Integer> strToLength = str -> str.length();`，这个表达式仅仅在`String`对象上调用`length()`方法。可以这样来简化它，`Function<String, Integer> strToLength = String::length;`。仅调用一个方法的lambda表达式，可以用缩写符号来表示。在`String::length`中，`String`是目标引用，`::`是定界符，`length`是目标引用要调用的方法。静态方法和实例方法都可以使用方法引用。
 
 ### Static method references
 
-假设我们需要从一个数字列表中找出最大的一个数字，那我们可以像这样写一个方法参考`Function<List<Integer>, Integer> maxFn = Collections::max`。`max`是一`Collections`里的一个静态方法，它需要传入一个`List`类型的参数。接下来你就可以这样调用它，`maxFn.apply(Arrays.asList(1, 10, 3, 5))`。上面的lambda表达式等价于`Function<List<Integer>, Integer> maxFn = (numbers) -> Collections.max(numbers);`。
+假设我们需要从一个数字列表中找出最大的一个数字，那我们可以像这样写一个方法引用`Function<List<Integer>, Integer> maxFn = Collections::max`。`max`是一`Collections`里的一个静态方法，它需要传入一个`List`类型的参数。接下来你就可以这样调用它，`maxFn.apply(Arrays.asList(1, 10, 3, 5))`。上面的lambda表达式等价于`Function<List<Integer>, Integer> maxFn = (numbers) -> Collections.max(numbers);`。
 
 ### Instance method references
 
-在这样的情况下，方法参考用于一个实例方法，比如`String::toUpperCase`是在一个`String`参考上调用 `toUpperCase`方法。还可以使用带参数的方法参考，比如：`BiFunction<String, String, String> concatFn = String::concat`。`concatFn`可以这样调用:`concatFn.apply("shekhar", "gulati")`。`String``concat`方法在一个String对象上调用并且传递一个类似`"shekhar".concat("gulati")`的参数。
+在这样的情况下，方法引用用于一个实例方法，比如`String::toUpperCase`是在一个`String`引用上调用 `toUpperCase`方法。还可以使用带参数的方法引用，比如：`BiFunction<String, String, String> concatFn = String::concat`。`concatFn`可以这样调用:`concatFn.apply("shekhar", "gulati")`。`String``concat`方法在一个String对象上调用并且传递一个类似`"shekhar".concat("gulati")`的参数。
 
 ## Exercise >> Lambdify me
 
@@ -274,7 +274,7 @@ public class Exercise_Lambdas {
 
 上面这段代码首先通过工具方法`getTasks`取得所有的Task,这里我们不去关心`getTasks`方法的具体实现，`getTasks`能够通过webservice或者数据库或者内存获取task。一旦得到了tasks,我们就过滤所有处于reading状态的task，并且从task中提取他们的标题，最后返回所有处于reading状态task的标题。
 
-下面我们简单的重构下--在一个list上使用foreach和方法参考。
+下面我们简单的重构下--在一个list上使用foreach和方法引用。
 
 ```java
 public class Exercise_Lambdas {
@@ -345,7 +345,7 @@ public class Exercise_Lambdas {
 }
 ```
 
-把方法参考当着提取器来使用。
+把方法引用当着提取器来使用。
 
 
 

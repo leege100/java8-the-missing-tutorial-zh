@@ -258,7 +258,7 @@ private static List<String> allReadingTasks(List<Task> tasks) {
 
 * **collect(toList())** 这是一个终极操作，它将所有READING的Task的标题的装进一个list中。
 
-我们可以通过使用`Comparator`接口的`comparing`方法和方法参考来将上面的代码简化成如下代码：
+我们可以通过使用`Comparator`接口的`comparing`方法和方法引用来将上面的代码简化成如下代码：
 
 ```java
 public List<String> allReadingTasks(List<Task> tasks) {
@@ -272,9 +272,9 @@ public List<String> allReadingTasks(List<Task> tasks) {
 ```
 
 > 从Java8开始，接口可以含有通过静态和默认方法来实现方法，在[ch01](./01-default-static-interface-methods.md)已经介绍过了。
-> 参考方法`Task::getCreatedOn`是由`Function<Task,LocalDate>`而来的。
+> 引用方法`Task::getCreatedOn`是由`Function<Task,LocalDate>`而来的。
 
-上面代码中，我们使用了`Comparator`接口中的静态帮助方法`comparing`，此方法需要接收一个用来提取`Comparable`的`Function`作为参数，返回一个通过key进行比较的`Comparator`。方法参考`Task::getCreatedOn` 是由 `Function<Task, LocalDate>`而来的.
+上面代码中，我们使用了`Comparator`接口中的静态帮助方法`comparing`，此方法需要接收一个用来提取`Comparable`的`Function`作为参数，返回一个通过key进行比较的`Comparator`。方法引用`Task::getCreatedOn` 是由 `Function<Task, LocalDate>`而来的.
 
 我们可以像如下代码这样，使用函数组合，通过在Comparator上调用`reversed()`方法，来非常轻松的颠倒排序。
 
